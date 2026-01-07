@@ -1,0 +1,89 @@
+{
+  "cv_accuracy_mean": 0.8542,
+  "cv_accuracy_std": 0.008721238444166054,
+  "train_accuracy": 0.9261,
+  "feature_importance": {
+    "feature": {
+      "15": "encryption_algorithm_encoded",
+      "11": "data_criticality",
+      "5": "expected_retention_years",
+      "2": "key_size_bits",
+      "16": "confidentiality_level_encoded",
+      "9": "confidentiality_score",
+      "1": "sampling_rate_hz",
+      "0": "data_size_kb",
+      "13": "device_type_encoded",
+      "7": "device_uptime_days",
+      "6": "compliance_score",
+      "4": "data_age_years",
+      "14": "data_type_encoded",
+      "3": "key_rotation_days",
+      "12": "access_risk",
+      "17": "access_frequency_encoded",
+      "8": "key_rotation_health",
+      "10": "has_regulation"
+    },
+    "importance": {
+      "15": 0.1761392343897625,
+      "11": 0.14391761661197522,
+      "5": 0.1397495424281243,
+      "2": 0.13343590641350367,
+      "16": 0.09225257603877596,
+      "9": 0.0843761354996188,
+      "1": 0.062119832893139444,
+      "0": 0.03999373918851139,
+      "13": 0.030660914865168996,
+      "7": 0.020471428808629975,
+      "6": 0.020261860514852882,
+      "4": 0.01903734961983809,
+      "14": 0.013022013941127054,
+      "3": 0.0075759197070991244,
+      "12": 0.006583777263376897,
+      "17": 0.006572268175473508,
+      "8": 0.0038298836410222475,
+      "10": 0.0
+    }
+  },
+  "accuracy": 0.858,
+  "precision_macro": 0.8433522962955752,
+  "recall_macro": 0.8609336433247005,
+  "f1_macro": 0.8506234119884646,
+  "precision_low": 0.9417322834645669,
+  "recall_low": 0.9143730886850153,
+  "f1_low": 0.9278510473235067,
+  "precision_medium": 0.8178217821782178,
+  "recall_medium": 0.8113948919449901,
+  "f1_medium": 0.8145956607495068,
+  "precision_high": 0.7651006711409396,
+  "recall_high": 0.9011857707509882,
+  "f1_high": 0.8275862068965517,
+  "precision_critical": 0.8487544483985765,
+  "recall_critical": 0.8167808219178082,
+  "f1_critical": 0.8324607329842932,
+  "confusion_matrix": [
+    [
+      598,
+      56,
+      0,
+      0
+    ],
+    [
+      36,
+      413,
+      0,
+      60
+    ],
+    [
+      0,
+      0,
+      228,
+      25
+    ],
+    [
+      1,
+      36,
+      70,
+      477
+    ]
+  ]
+}

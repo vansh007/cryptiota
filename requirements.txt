@@ -1,0 +1,24 @@
+# Core ML
+numpy==1.24.3
+pandas==2.0.3
+scikit-learn==1.3.0
+xgboost==1.7.6
+
+# Cryptography
+cryptography==41.0.3
+pycryptodome==3.18.0
+
+# Post-Quantum (we'll handle this separately)
+# liboqs-python requires special installation
+
+# Visualization
+matplotlib==3.7.2
+seaborn==0.12.2
+
+# Utilities
+psutil==5.9.5
+tqdm==4.66.1
+joblib==1.3.2
+
+# Data
+faker==19.3.1
