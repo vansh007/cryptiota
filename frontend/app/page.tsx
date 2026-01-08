@@ -129,16 +129,43 @@ const getRiskColor = (risk: RiskLevel) => {
   return colors[risk];
 };
 
+type GradientColor = "blue" | "purple" | "green" | "orange" | "pink" | "cyan";
+const gradientMap: Record<GradientColor, string> = {
+  blue: "from-blue-500 to-cyan-500",
+  purple: "from-purple-500 to-pink-500",
+  green: "from-green-500 to-emerald-500",
+  orange: "from-orange-500 to-red-500",
+  pink: "from-pink-500 to-rose-500",
+  cyan: "from-cyan-500 to-blue-500",
+};
+
+const featureColorMap: Record<GradientColor, string> = {
+  blue: "from-blue-500 to-blue-600",
+  purple: "from-purple-500 to-purple-600",
+  green: "from-green-500 to-green-600",
+  orange: "from-orange-500 to-orange-600",
+  pink: "from-pink-500 to-pink-600",
+  cyan: "from-cyan-500 to-cyan-600",
+};
+
+// const featureColorMap: Record<GradientColor, string> = {
+//   blue: "from-blue-500 to-blue-600",
+//   purple: "from-purple-500 to-purple-600",
+//   green: "from-green-500 to-green-600",
+//   orange: "from-orange-500 to-orange-600",
+//   pink: "from-pink-500 to-pink-600",
+//   cyan: "from-cyan-500 to-cyan-600",
+// };
 
   
-  const gradientMap = {
-    blue: "from-blue-500 to-blue-600",
-    purple: "from-purple-500 to-purple-600",
-    green: "from-green-500 to-green-600",
-    orange: "from-orange-500 to-orange-600",
-    pink: "from-pink-500 to-pink-600",
-    cyan: "from-cyan-500 to-cyan-600"
-  };
+  // const gradientMap = {
+  //   blue: "from-blue-500 to-blue-600",
+  //   purple: "from-purple-500 to-purple-600",
+  //   green: "from-green-500 to-green-600",
+  //   orange: "from-orange-500 to-orange-600",
+  //   pink: "from-pink-500 to-pink-600",
+  //   cyan: "from-cyan-500 to-cyan-600"
+  // };
 
 
   const downloadMigrationPlan = async () => {
@@ -320,14 +347,14 @@ const normalizeResults = (data: any) => ({
             <h3 className="text-3xl font-bold text-white text-center mb-12">How QuantumGuard AI Works</h3>
             <div className="grid grid-cols-4 gap-6">
               {[
-                { step: 1, title: 'Upload Data', desc: 'Upload your IoT metadata (CSV/JSON)', icon: Upload, color: 'blue' },
+              { step: 1, title: 'Upload Data', desc: 'Upload your IoT metadata (CSV/JSON)', icon: Upload, color: 'blue' },
                 { step: 2, title: 'AI Analysis', desc: 'ML model predicts quantum risk', icon: Brain, color: 'purple' },
                 { step: 3, title: 'Smart Migration', desc: 'Selective PQ encryption applied', icon: Lock, color: 'green' },
                 { step: 4, title: 'Get Results', desc: 'Download migration plan + savings', icon: Download, color: 'orange' }
               ].map((item, i) => (
                 <div key={i} className="relative">
                   <div className="bg-slate-800/50 backdrop-blur-lg border border-slate-700 rounded-xl p-6 hover:border-blue-500/50 transition-all h-full">
-                    <div className={`bg-gradient-to-br ${gradientMap[item.color]} w-12 h-12 rounded-full flex items-center justify-center mb-4 text-white font-bold text-lg`}>
+                    <div className={`bg-gradient-to-br ${gradientMap[item.color as GradientColor]} w-12 h-12 rounded-full flex items-center justify-center mb-4 text-white font-bold text-lg`}>
                       {item.step}
                     </div>
                     <item.icon className="w-8 h-8 text-blue-400 mb-3" />
@@ -448,18 +475,21 @@ const normalizeResults = (data: any) => ({
                   <span>Risk Distribution</span>
                 </h4>
                 <div className="grid grid-cols-4 gap-4">
-                  {Object.entries(results?.riskDistribution ?? {}).map(([risk, count]) => (
-
-                    <div key={risk} className="text-center">
-                      <div className={`text-3xl font-bold mb-2 ${getRiskColor(risk as RiskLevel)}`}>
-                        {count}
+                  {Object.entries(results?.riskDistribution ?? {}).map(([risk, count]) => {
+                    const cnt = Number(count);
+                    
+                    return (
+                      <div key={risk} className="text-center">
+                        <div className={`text-3xl font-bold mb-2 ${getRiskColor(risk as RiskLevel)}`}>
+                          {cnt.toLocaleString()}
+                        </div>
+                        <div className="text-sm text-slate-400 capitalize">{risk}</div>
+                        <div className="text-xs text-slate-500 mt-1">
+                          {(((cnt) / (results?.totalRecords ?? 1)) * 100).toFixed(1)}%
+                        </div>
                       </div>
-                      <div className="text-sm text-slate-400 capitalize">{risk}</div>
-                      <div className="text-xs text-slate-500 mt-1">
-                        {((count / results.totalRecords) * 100).toFixed(1)}%
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
@@ -495,7 +525,7 @@ const normalizeResults = (data: any) => ({
                   <span>Sample Device Recommendations</span>
                 </h4>
                 <div className="space-y-3">
-                  {results.predictions.map((pred, i) => (
+                  {results?.predictions?.map((pred: any, i: number) => (
                     <div key={i} className="bg-slate-900/50 rounded-lg p-4 flex items-center justify-between">
                       <div className="flex-1">
                         <div className="font-semibold text-white mb-1">{pred.device}</div>
@@ -558,7 +588,11 @@ const normalizeResults = (data: any) => ({
               { title: 'API Integration', desc: 'REST API for seamless integration with your existing IoT infrastructure', icon: Server, color: 'cyan' }
             ].map((feature, i) => (
               <div key={i} className="bg-slate-800/50 backdrop-blur-lg border border-slate-700 rounded-xl p-6 hover:border-blue-500/50 transition-all">
-                <div className={`bg-gradient-to-br from-${feature.color}-500 to-${feature.color}-600 w-12 h-12 rounded-lg flex items-center justify-center mb-4`}>
+                <div
+                    className={`bg-gradient-to-br ${
+                      featureColorMap[feature.color as GradientColor]
+                    } w-12 h-12 rounded-lg flex items-center justify-center mb-4`}
+                  >
                   <feature.icon className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
