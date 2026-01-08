@@ -8,7 +8,8 @@ const QuantumGuardAI = () => {
   const [analyzing, setAnalyzing] = useState(false);
   const [results, setResults] = useState<any>(null);
   const [showDemo, setShowDemo] = useState(false);
-  const API_BASE = "http://127.0.0.1:5001";
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:5001";
+
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
   const file = event.target.files?.[0];
@@ -115,15 +116,19 @@ const QuantumGuardAI = () => {
     }, 3000);
   };
 
-  const getRiskColor = (risk) => {
-    const colors = {
-      critical: 'text-red-600 bg-red-50 border-red-200',
-      high: 'text-orange-600 bg-orange-50 border-orange-200',
-      medium: 'text-yellow-600 bg-yellow-50 border-yellow-200',
-      low: 'text-green-600 bg-green-50 border-green-200'
-    };
-    return colors[risk] || colors.low;
+type RiskLevel = "critical" | "high" | "medium" | "low";
+
+const getRiskColor = (risk: RiskLevel) => {
+  const colors: Record<RiskLevel, string> = {
+    critical: 'text-red-600 bg-red-50 border-red-200',
+    high: 'text-orange-600 bg-orange-50 border-orange-200',
+    medium: 'text-yellow-600 bg-yellow-50 border-yellow-200',
+    low: 'text-green-600 bg-green-50 border-green-200'
   };
+
+  return colors[risk];
+};
+
 
   
   const gradientMap = {
@@ -446,7 +451,7 @@ const normalizeResults = (data: any) => ({
                   {Object.entries(results?.riskDistribution ?? {}).map(([risk, count]) => (
 
                     <div key={risk} className="text-center">
-                      <div className={`text-3xl font-bold mb-2 ${getRiskColor(risk)}`}>
+                      <div className={`text-3xl font-bold mb-2 ${getRiskColor(risk as RiskLevel)}`}>
                         {count}
                       </div>
                       <div className="text-sm text-slate-400 capitalize">{risk}</div>
@@ -467,17 +472,17 @@ const normalizeResults = (data: any) => ({
                 <div className="grid grid-cols-3 gap-6">
                   <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-500/30 rounded-lg p-4">
                     <div className="text-purple-400 text-sm font-semibold mb-2">Post-Quantum (Kyber768)</div>
-                    <div className="text-3xl font-bold text-white mb-1">{results.recommendations.postquantum}</div>
+                    <div className="text-3xl font-bold text-white mb-1">{results?.recommendations?.postquantum ?? 0}</div>
                     <div className="text-xs text-slate-400">High & Critical Risk</div>
                   </div>
                   <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/20 border border-blue-500/30 rounded-lg p-4">
                     <div className="text-blue-400 text-sm font-semibold mb-2">Hybrid (ECDH+Kyber)</div>
-                    <div className="text-3xl font-bold text-white mb-1">{results.recommendations.hybrid}</div>
+                    <div className="text-3xl font-bold text-white mb-1">{results?.recommendations?.hybrid ?? 0}</div>
                     <div className="text-xs text-slate-400">Medium Risk</div>
                   </div>
                   <div className="bg-gradient-to-br from-green-900/20 to-green-800/20 border border-green-500/30 rounded-lg p-4">
                     <div className="text-green-400 text-sm font-semibold mb-2">Keep Classical</div>
-                    <div className="text-3xl font-bold text-white mb-1">{results.recommendations.classical}</div>
+                    <div className="text-3xl font-bold text-white mb-1">{results?.recommendations?.classical ?? 0}</div>
                     <div className="text-xs text-slate-400">Low Risk</div>
                   </div>
                 </div>
@@ -500,7 +505,7 @@ const normalizeResults = (data: any) => ({
                         </div>
                       </div>
                       <div className="flex items-center space-x-4">
-                        <span className={`px-3 py-1 rounded-full text-sm font-semibold border ${getRiskColor(pred.risk)}`}>
+                        <span className={`px-3 py-1 rounded-full text-sm font-semibold border ${getRiskColor(pred.risk as RiskLevel)}`}>
                           {pred.risk.toUpperCase()}
                         </span>
                         <div className="text-right">
