@@ -27,7 +27,8 @@ from crypto.classical import ClassicalCrypto
 from crypto.postquantum import PostQuantumCrypto
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+  # Enable CORS for frontend
 
 # Initialize models (load once at startup)
 print("Loading ML models...")
@@ -369,4 +370,6 @@ if __name__ == '__main__':
     print("\n✅ Server ready!")
     print("="*60 + "\n")
     
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    # app.run(debug=True, host='0.0.0.0', port=5001)
+    if __name__ == "__main__":
+    app.run()
